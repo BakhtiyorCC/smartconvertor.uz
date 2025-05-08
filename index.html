@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartConverter</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="smartconvertor.jpg" type="png/img/png">
+</head>
+<body>
+    <img src="smartconvertor.jpg" alt="samartconvertor">
+    <h2>Volyutangizni osson hisoblang!</h2>
+    <form id="currencyForm">
+        <label for="amount">Pul miqdorini kiriting:</label>
+        <input type="number" id="amount" name="amount" placeholder="Miqdor kiriting" required>
+
+        <label for="fromCurrency">Valyutani tanlang (Qayerdan):</label>
+        <select id="fromCurrency" name="fromCurrency" required>
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="UZS">UZS</option>
+            <option value="RUB">RUB</option>
+        </select>
+
+        <label for="toCurrency">Konvertatsiya qilish uchun valyutani tanlang (Qayerga):</label>
+        <select id="toCurrency" name="toCurrency" required>
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="UZS">UZS</option>
+            <option value="RUB">RUB</option>
+        </select>
+
+        <button type="submit">Konvertatsiya qilish</button>
+    </form>
+
+    <h3 id="output"></h3>
+
+    <script>
+        // API uchun URL va o'z API kalitingiz
+        const API_KEY = '05b8e6cdeea54ab55df49113';  // Bu yerga API kalitingizni joylashtiring
+        const BASE_URL = `https://v6.exchangerate-api.com/v6/${API_KEY}/latest/`;
+
+        // Form yuborilganda valyutani konvertatsiya qilish
+        document.getElementById('currencyForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            let amount = document.getElementById('amount').value;
+            let fromCurrency = document.getElementById('fromCurrency').value;
+            let toCurrency = document.getElementById('toCurrency').value;
+
+            // API URL-ga so'rov yuborish
+            fetch(`${BASE_URL}${fromCurrency}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Kursni olish
+                    let rate = data.conversion_rates[toCurrency];
+                    let convertedAmount = (amount * rate).toFixed(2);
+
+                    // Natijani foydalanuvchiga ko'rsatish
+                    document.getElementById('output').textContent = `${amount} ${fromCurrency} = ${convertedAmount} ${toCurrency}`;
+                })
+                .catch(error => {
+                    console.error('Xato yuz berdi:', error);
+                    document.getElementById('output').textContent = 'Kursni olishda xato yuz berdi.';
+                });
+        });
+    </script>
+</body>
+</html>
