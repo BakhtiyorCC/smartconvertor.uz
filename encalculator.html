@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head> 
+<meta charset="UTF-8"> 
+<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+<title>SmartConverter</title> 
+<link rel="stylesheet" href="style.css"> 
+<link rel="icon" href="smartconvertor.jpg" type="png/img/png"> 
+<script src="script.js" defer></script>
+</head>
+<body> 
+<img src="smartconvertor.jpg" alt="smartconvertor"> 
+<h2>Calculate your currency easily!</h2> 
+<nav id="navbar"> 
+<a href="index.html">Home</a> 
+<a href="calculator.html">Currency Calculator</a> 
+<a href="https://bakhtiyorcc.github.io">About Us</a> 
+<a href="contact.html">Contact</a> 
+<a href="calculator.html">UZ</a> 
+<a href="rucalculator.html">RU</a> 
+</nav> 
+<form id="currencyForm"> 
+<label for="amount">Enter the amount of money:</label> 
+<input type="number" id="amount" name="amount" placeholder="Enter an amount" required> 
+
+<label for="fromCurrency">Select currency (From):</label> 
+<select id="fromCurrency" name="fromCurrency" required> 
+<option value="USD">USD $</option>
+<option value="EUR">EUR €</option>
+<option value="RUB">RUB ₽</option>
+<option value="UZS">UZS so‘m</option>
+</select> 
+
+<label for="toCurrency">Select a currency to convert (To):</label> 
+<select id="toCurrency" name="toCurrency" required> 
+<option value="USD">USD $</option>
+<option value="EUR">EUR €</option>
+<option value="RUB">RUB ₽</option>
+<option value="UZS">UZS so‘m</option>
+</select>
+
+<button type="submit">Convert</button>
+</form>
+<div id="loader" style="display:none;">Yuklanmoqda...</div>
+    <script>
+        document.getElementById('currencyForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    document.getElementById('loader').style.display = 'block';  // Show loader
+    let amount = document.getElementById('amount').value;
+    let fromCurrency = document.getElementById('fromCurrency').value;
+    let toCurrency = document.getElementById('toCurrency').value;
+    
+    fetch(`${BASE_URL}${fromCurrency}`)
+        .then(response => response.json())
+        .then(data => {
+            let rate = data.conversion_rates[toCurrency];
+            let convertedAmount = (amount * rate).toFixed(2);
+            document.getElementById('output').textContent = `${amount} ${fromCurrency} = ${convertedAmount} ${toCurrency}`;
+            document.getElementById('loader').style.display = 'none'; // Hide loader
+        })
+        .catch(error => {
+            document.getElementById('output').textContent = 'An error occurred while retrieving the exchange rate.';
+            document.getElementById('loader').style.display = 'none'; // Hide loader
+        });
+});
+        document.getElementById('loader').style.display = 'none'; // Hide loader
+    </script>
+<canvas id="rateChart" width="400" height="200"></canvas>
+
+
+<h3 id="output"></h3>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+// URL for the API and your API key
+const API_KEY = '05b8e6cdeea54ab55df49113'; // Paste your API key here
+const BASE_URL = `https://v6.exchangerate-api.com/v6/${API_KEY}/latest/`;
+
+// Convert currency when form is submitted 
+document.getElementById('currencyForm').addEventListener('submit', function(event) { 
+event.preventDefault(); 
+
+let amount = document.getElementById('amount').value; 
+let fromCurrency = document.getElementById('fromCurrency').value; 
+let toCurrency = document.getElementById('toCurrency').value; 
+
+// Send a request to the API URL 
+fetch(`${BASE_URL}${fromCurrency}`) 
+.then(response => response.json()) 
+.then(data => { 
+// Get the course 
+let rate = data.conversion_rates[toCurrency]; 
+let convertedAmount = (amount * rate).toFixed(2); 
+
+// Display the result to the user 
+document.getElementById('output').textContent = `${amount} ${fromCurrency} = ${convertedAmount} ${toCurrency}`;
+})
+.catch(error => {
+console.error('An error occurred:', error);
+document.getElementById('output').textContent = 'An error occurred while retrieving the exchange rate.';
+});
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartConvertor</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="smartconvertor.jpg" type="png/img/png">
+    <script src="script.js" defer></script>
+    <style>
+        #popular-currencies {
+            margin: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #currency-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        #currency-list li {
+            margin: 5px 0;
+        }
+        #currency-list li strong {
+            font-weight: bold;
+        }
+        #navbar {
+            display: flex;
+            justify-content: space-around;
+            background-color: #f8f8f8;
+            padding: 10px;
+        }
+        #navbar a {
+            text-decoration: none;
+            color: #333;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        #navbar a:hover {
+            background-color: #ddd;
+        }
+        header {
+            text-align: center;
+            margin: 20px 0;
+        }
+        header img {
+            width: 100px;
+            height: auto;
+        }
+        header h2 {
+            margin: 10px 0;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        h3 {
+            text-align: center;
+            margin-top: 20px;
+        }
+        h4 {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .container h4 {
+            margin: 10px 0;
+        }
+        .container a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+        .container a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="smartconvertor.jpg" alt="SmartConverter">
+        <h2>SmartConvertor - Calculate your currency easily!</h2>
+    </header>
+    <nav id="navbar">
+        <a href="index.html">Home</a>
+        <a href="calculator.html">Currency Calculator</a>
+        <a href="https://bakhtiyorcc.github.io">About Us</a>
+        <a href="contact.html">Contact</a>
+        <a href="enindex.html">EN</a>
+        <a href="ruindex.html">RU</a>
+    </nav>
+    <section id="popular-currencies">
+    <h3>Eng Ko'p Foydalaniladigan Valyutalar</h3>
+    <ul id="currency-list">
+        <!-- API orqali real vaqtda valyutalar ma'lumotlari joylanadi -->
+    </ul>
+</section>
+<script>
+    // API orqali valyutalar ma'lumotini olish
+const API_KEY = '05b8e6cdeea54ab55df49113'; // API kalitini bu yerga qo'ying
+const BASE_URL = `https://v6.exchangerate-api.com/v6/${API_KEY}/latest/USD`;
+
+fetch(BASE_URL)
+    .then(response => response.json())
+    .then(data => {
+        const popularCurrencies = ['EUR', 'GBP', 'JPY', 'CNY', 'AUD'];  // Mashhur valyutalar ro'yxati
+        const currencyList = document.getElementById('currency-list');
+
+        popularCurrencies.forEach(currency => {
+            let rate = data.conversion_rates[currency];  // API'dan olingan valyuta kursi
+            let listItem = document.createElement('li');
+            listItem.innerHTML = `<strong>${currency}</strong>: ${rate} ${currency}`;
+            currencyList.appendChild(listItem);
+        });
+    })
+    .catch(error => {
+        console.error('Ma\'lumot olishda xato yuz berdi:', error);
+        const currencyList = document.getElementById('currency-list');
+        let errorItem = document.createElement('li');
+        errorItem.textContent = 'Ma\'lumotlarni olishda xato yuz berdi.';
+        currencyList.appendChild(errorItem);
+    });
+</script>
+</body>
+</html>

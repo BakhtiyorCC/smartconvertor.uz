@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartConverter</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="smartconvertor.jpg" type="png/img/png">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <img src="smartconvertor.jpg" alt="samartconvertor">
+    <h2>Volyutangizni osson hisoblang!</h2>
+    <nav id="navbar">
+        <a href="index.html">Asosiy sahifa</a>
+        <a href="calculator.html">Valyuta kalkulyatori</a>
+        <a href="https://bakhtiyorcc.github.io">Biz haqimizda</a>
+        <a href="contact.html">Aloqa</a>
+        <a href="encalculator.html">EN</a>
+        <a href="rucalculator.html">RU</a>
+    </nav>
+    <form id="currencyForm">
+        <label for="amount">Pul miqdorini kiriting:</label>
+        <input type="number" id="amount" name="amount" placeholder="Miqdor kiriting" required>
+
+        <label for="fromCurrency">Valyutani tanlang (Qayerdan):</label>
+        <select id="fromCurrency" name="fromCurrency" required>
+            <option value="USD">USD $</option>
+            <option value="EUR">EUR €</option>
+            <option value="RUB">RUB ₽</option>
+            <option value="UZS">UZS so‘m</option>
+        </select>
+
+        <label for="toCurrency">Konvertatsiya qilish uchun valyutani tanlang (Qayerga):</label>
+        <select id="toCurrency" name="toCurrency" required>
+            <option value="USD">USD $</option>
+<option value="EUR">EUR €</option>
+<option value="RUB">RUB ₽</option>
+<option value="UZS">UZS so‘m</option>
+        </select>
+
+        <button type="submit">Konvertatsiya qilish</button>
+    </form>
+    <div id="loader" style="display:none;">Yuklanmoqda...</div>
+
+    
+    <h3 id="output"></h3>
+    <canvas id="rateChart" width="400" height="200"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const fromCurrencyInput = document.getElementById("fromCurrency");
+fromCurrencyInput.addEventListener("input", function () {
+    const filter = fromCurrencyInput.value.toUpperCase();
+    const options = fromCurrencyInput.getElementsByTagName("option");
+    for (let i = 0; i < options.length; i++) {
+        const option = options[i];
+        const text = option.textContent || option.innerText;
+        option.style.display = text.toUpperCase().indexOf(filter) > -1 ? "" : "none";
+    }
+});
+        const toCurrencyInput = document.getElementById("toCurrency");
+    </script>
+    <script>
+        // API uchun URL va o'z API kalitingiz
+        const API_KEY = '05b8e6cdeea54ab55df49113';  // Bu yerga API kalitingizni joylashtiring
+        const BASE_URL = `https://v6.exchangerate-api.com/v6/${API_KEY}/latest/`;
+
+        // Form yuborilganda valyutani konvertatsiya qilish
+        document.getElementById('currencyForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            let amount = document.getElementById('amount').value;
+            let fromCurrency = document.getElementById('fromCurrency').value;
+            let toCurrency = document.getElementById('toCurrency').value;
+
+            // API URL-ga so'rov yuborish
+            fetch(`${BASE_URL}${fromCurrency}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Kursni olish
+                    let rate = data.conversion_rates[toCurrency];
+                    let convertedAmount = (amount * rate).toFixed(2);
+
+                    // Natijani foydalanuvchiga ko'rsatish
+                    document.getElementById('output').textContent = `${amount} ${fromCurrency} = ${convertedAmount} ${toCurrency}`;
+                })
+                .catch(error => {
+                    console.error('Xato yuz berdi:', error);
+                    document.getElementById('output').textContent = 'Kursni olishda xato yuz berdi.';
+                });
+        });
+        // Sana oraliqlarini tayyorlaymiz (so‘nggi 7 kun)
+const endDate = new Date();
+const startDate = new Date();
+startDate.setDate(endDate.getDate() - 6);
+
+const formatDate = date => date.toISOString().split('T')[0];
+
+const startStr = formatDate(startDate);
+const endStr = formatDate(endDate);
+
+// API dan tarixiy ma'lumotlarni olib grafik chizamiz
+const historyUrl = `https://api.exchangerate.host/timeseries?start_date=${startStr}&end_date=${endStr}&base=${fromCurrency}&symbols=${toCurrency}`;
+
+fetch(historyUrl)
+.then(res => res.json())
+.then(historyData => {
+    const labels = Object.keys(historyData.rates);
+    const data = labels.map(date => historyData.rates[date][toCurrency]);
+
+    const ctx = document.getElementById('rateChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: `${fromCurrency} → ${toCurrency}`,
+                data: data,
+                borderColor: 'blue',
+                tension: 0.3,
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: `Kurslar grafigi: ${fromCurrency} → ${toCurrency}`
+                }
+            }
+        }
+    });
+});
+
+    </script>
+</body>
+</html>

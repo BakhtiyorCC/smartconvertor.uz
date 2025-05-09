@@ -3,67 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartConverter</title>
+    <title>SmartConvertor</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="smartconvertor.jpg" type="png/img/png">
+    <link rel="icon" href="smartconvertor.jpg" type="png/img/jpg">
 </head>
 <body>
-    <img src="smartconvertor.jpg" alt="samartconvertor">
-    <h2>Volyutangizni osson hisoblang!</h2>
-    <form id="currencyForm">
-        <label for="amount">Pul miqdorini kiriting:</label>
-        <input type="number" id="amount" name="amount" placeholder="Miqdor kiriting" required>
-
-        <label for="fromCurrency">Valyutani tanlang (Qayerdan):</label>
-        <select id="fromCurrency" name="fromCurrency" required>
-            <option value="USD">USD</option>
-            <option value="EUR">EUR</option>
-            <option value="UZS">UZS</option>
-            <option value="RUB">RUB</option>
-        </select>
-
-        <label for="toCurrency">Konvertatsiya qilish uchun valyutani tanlang (Qayerga):</label>
-        <select id="toCurrency" name="toCurrency" required>
-            <option value="USD">USD</option>
-            <option value="EUR">EUR</option>
-            <option value="UZS">UZS</option>
-            <option value="RUB">RUB</option>
-        </select>
-
-        <button type="submit">Konvertatsiya qilish</button>
-    </form>
-
-    <h3 id="output"></h3>
-
-    <script>
-        // API uchun URL va o'z API kalitingiz
-        const API_KEY = '05b8e6cdeea54ab55df49113';  // Bu yerga API kalitingizni joylashtiring
-        const BASE_URL = `https://v6.exchangerate-api.com/v6/${API_KEY}/latest/`;
-
-        // Form yuborilganda valyutani konvertatsiya qilish
-        document.getElementById('currencyForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            let amount = document.getElementById('amount').value;
-            let fromCurrency = document.getElementById('fromCurrency').value;
-            let toCurrency = document.getElementById('toCurrency').value;
-
-            // API URL-ga so'rov yuborish
-            fetch(`${BASE_URL}${fromCurrency}`)
-                .then(response => response.json())
-                .then(data => {
-                    // Kursni olish
-                    let rate = data.conversion_rates[toCurrency];
-                    let convertedAmount = (amount * rate).toFixed(2);
-
-                    // Natijani foydalanuvchiga ko'rsatish
-                    document.getElementById('output').textContent = `${amount} ${fromCurrency} = ${convertedAmount} ${toCurrency}`;
-                })
-                .catch(error => {
-                    console.error('Xato yuz berdi:', error);
-                    document.getElementById('output').textContent = 'Kursni olishda xato yuz berdi.';
-                });
-        });
-    </script>
+    <header>
+            <img src="smartconvertor.jpg" alt="SmartConverter">
+            <h2>SmartConvertor - Volyutangizni osson hisoblang!</h2>
+    </header>
+    <nav id="navbar">
+        <a href="index.html">Asosiy sahifa</a>
+        <a href="calculator.html">Valyuta kalkulyatori</a>
+        <a href="reyting.html">Valyutalar Reytingi</a>
+        <a href="https://bakhtiyorcc.github.io">Biz haqimizda</a>
+        <a href="contact.html">Aloqa</a>
+        <a href="enindex.html">EN</a>
+        <a href="ruindex.html">RU</a>
+    </nav>
+    <aside>
+        <h3>Ma'lumot vaqti: 09.05.2025</h3>
+        <img src="Dollar.jpg" alt="Dollar">
+        <h3>💵 AQSh dollari (USD)</h3>
+        <ul>
+            <li>
+                Rasmiy kurs: 12 880,35 so‘m
+            </li>
+            <li>
+                O‘zgarish: 29,80 so‘mga pasaydi
+            </li>
+            <li>
+                Izoh: Markaziy bank tomonidan e'lon qilingan ma'lumotlarga ko‘ra, dollar kursi ketma-ket pasayishda davom etmoqda. 
+                Bu esa iqtisodiy barqarorlikni ko‘rsatadi.
+            </li>
+        </ul>
+        <img src="Euro.jpg" alt="Euro">
+        <h3>💶 Yevro (EUR)</h3>
+        <ul>
+            <li>
+                Rasmiy kurs: 14 535,47 so‘m
+            </li>
+            <li>
+                O‘zgarish: 125,30 so‘mga pasaydi
+            </li>
+            <li>
+                Izoh: Yevro kursi ham pasayish tendensiyasini ko‘rsatmoqda.
+            </li>
+        </ul>
+        <img src="Rubl.jpg" alt="Rubl">
+        <h3>💴 Rossiya rubli (RUB)</h3>
+        <ul>
+            <li>
+                Rasmiy kurs: 156,68 so‘m
+            </li>
+            <li>
+                O‘zgarish: 3,10 so‘mga pasaydi
+            </li>
+            <li>
+                Izoh: Rubl kursi ham pasayish yo‘lida davom etmoqda. 
+            </li>
+        </ul>
+        <img src="UZS.jpg" alt="O‘zbekiston so‘mi">
+        <h3>🇺🇿 O‘zbekiston so‘mi (UZS)</h3>
+        <ul>
+            <li>
+                Izoh: So‘mning boshqa valyutalarga nisbatan qiymati oshmoqda,<br>
+                 bu esa import narxlariga ijobiy ta'sir ko‘rsatishi mumkin.
+            </li>
+        </ul>
+    </aside>
 </body>
 </html>

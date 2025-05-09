@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>SmartConverter</title> 
+  <link rel="stylesheet" href="style.css"> 
+  <link rel="icon" href="smartconvertor.jpg" type="png/img/png"> 
+  <script src="script.js" defer></script>
+</head>
+<body> 
+  <img src="smartconvertor.jpg" alt="smartconvertor"> 
+  <h2>Легко рассчитайте свою валюту!</h2> 
+
+  <nav id="navbar"> 
+    <a href="index.html">Главная</a> 
+    <a href="calculator.html">Калькулятор валют</a> 
+    <a href="https://bakhtiyorcc.github.io">О нас</a> 
+    <a href="contact.html">Контакты</a> 
+    <a href="encalculator.html">EN</a> 
+    <a href="calculator.html">UZ</a> 
+  </nav> 
+
+  <form id="currencyForm"> 
+    <label for="amount">Введите сумму:</label> 
+    <input type="number" id="amount" name="amount" placeholder="Введите сумму" required> 
+
+    <label for="fromCurrency">Выберите валюту (из):</label> 
+    <select id="fromCurrency" name="fromCurrency" required> 
+      <option value="USD">USD $</option>
+      <option value="EUR">EUR €</option>
+      <option value="RUB">RUB ₽</option>
+      <option value="UZS">UZS so‘m</option> 
+    </select> 
+
+    <label for="toCurrency">Выберите валюту для конвертации (в):</label> 
+    <select id="toCurrency" name="toCurrency" required> 
+      <option value="USD">USD $</option>
+<option value="EUR">EUR €</option>
+<option value="RUB">RUB ₽</option>
+<option value="UZS">UZS so‘m</option>
+    </select>
+
+    <button type="submit">Конвертировать</button>
+  </form>
+  <div id="loader" style="display:none;">Yuklanmoqda...</div>
+    <script>
+        document.getElementById('currencyForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    document.getElementById('loader').style.display = 'block';  // Show loader
+    let amount = document.getElementById('amount').value;
+    let fromCurrency = document.getElementById('fromCurrency').value;
+    let toCurrency = document.getElementById('toCurrency').value;
+    
+    fetch(`${BASE_URL}${fromCurrency}`)
+        .then(response => response.json())
+        .then(data => {
+            let rate = data.conversion_rates[toCurrency];
+            let convertedAmount = (amount * rate).toFixed(2);
+            document.getElementById('output').textContent = `${amount} ${fromCurrency} = ${convertedAmount} ${toCurrency}`;
+            document.getElementById('loader').style.display = 'none'; // Hide loader
+        })
+        .catch(error => {
+            document.getElementById('output').textContent = 'An error occurred while retrieving the exchange rate.';
+            document.getElementById('loader').style.display = 'none'; // Hide loader
+        });
+});
+        document.getElementById('loader').style.display = 'none'; // Hide loader
+    </script>
+
+  <h3 id="output"></h3>
+
+  <script>
+    const API_KEY = '05b8e6cdeea54ab55df49113';
+    const BASE_URL = `https://v6.exchangerate-api.com/v6/${API_KEY}/latest/`;
+
+    document.getElementById('currencyForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      let amount = document.getElementById('amount').value;
+      let fromCurrency = document.getElementById('fromCurrency').value;
+      let toCurrency = document.getElementById('toCurrency').value;
+
+      fetch(`${BASE_URL}${fromCurrency}`)
+        .then(response => response.json())
+        .then(data => {
+          let rate = data.conversion_rates[toCurrency];
+          let convertedAmount = (amount * rate).toFixed(2);
+          document.getElementById('output').textContent = `${amount} ${fromCurrency} = ${convertedAmount} ${toCurrency}`;
+        })
+        .catch(error => {
+          console.error('An error occurred:', error);
+          document.getElementById('output').textContent = 'Произошла ошибка при получении курса валют.';
+        });
+    });
+  </script>
+</body>
+</html>
